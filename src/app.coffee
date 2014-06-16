@@ -1,37 +1,48 @@
-http = require('http')
-express = require("express")
-RED = require("node-red")
+http = require "http"
+express = require "express"
+RED = require "node-red"
+async = require "async"
+{normalize} = require "path"
 
-# Create an Express app
-app = express()
+loadVideos = require "./videos"
 
-# Add a simple route for static content served from 'public'
-#app.use "/", express.static("public")
+videoPath = normalize(process.env.VIDEO_PATH || "#{__dirname}/../videos")
 
-# Create a server
-server = http.createServer(app)
-
-# Create the settings object
 settings =
-  flowFile: "#{__dirname}/../flow.json"
-  flowFilePretty: true
-  httpAdminRoot: "/red"
+  flowFile: normalize("#{__dirname}/../flow.json")
+  httpAdminRoot: "/"
   httpNodeRoot: "/api"
-  userDir: "#{__dirname}/../tmp"
+  userDir: normalize("#{__dirname}/../tmp")
   verbose: true
-  functionGlobalContext:
-    testing: 1
+  functionGlobalContext: {}
 
-# Initialise the runtime with a server and settings
-RED.init(server, settings)
+funcs =
+  app: (cb) ->
+    cb null, express()
 
-# Serve the editor UI from /red
-app.use settings.httpAdminRoot, RED.httpAdmin
+  videos: (cb) ->
+    loadVideos videoPath, cb
 
-# Serve the http nodes UI from /api
-app.use settings.httpNodeRoot, RED.httpNode
+  settings: ["videos", (cb, {videos}) ->
+    settings.functionGlobalContext.videos = videos
+    cb null, settings
+  ]
 
-server.listen 8000, ->
-  # Start the runtime
-  RED.start().done ->
-    console.log "Listening on localhost:8000"
+  server: ["app", "settings", (cb, {settings, app}) ->
+    server = http.createServer app
+    RED.init server, settings
+    app.use settings.httpAdminRoot, RED.httpAdmin
+    app.use settings.httpNodeRoot, RED.httpNode
+    server.listen 8000, cb
+  ]
+
+  red: ["server", (cb) ->
+    RED.start().done cb
+  ]
+
+async.auto funcs, (err) ->
+  if err
+    console.log err
+    process.exit 1
+
+  console.log "Listening on http://localhost:8000"

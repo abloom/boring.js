@@ -3,10 +3,13 @@
   "version": "0.0.0",
   "description": "Raspberry Pi and Node-Red for the Boring Store",
   "main": "index.js",
+  "bin": "bin/server",
   "dependencies": {
     "node-red": "^0.7.2",
     "coffee-script": "^1.7.1",
-    "express": "^4.4.3"
+    "express": "^4.4.3",
+    "async": "^0.9.0",
+    "underscore": "^1.6.0"
   },
   "devDependencies": {},
   "scripts": {
