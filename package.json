@@ -1,0 +1,25 @@
+{
+  "name": "boring.js",
+  "version": "0.0.0",
+  "description": "Raspberry Pi and Node-Red for the Boring Store",
+  "main": "index.js",
+  "dependencies": {
+    "node-red": "^0.7.2",
+    "coffee-script": "^1.7.1",
+    "express": "^4.4.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/abloom/boring.js.git"
+  },
+  "author": "Andrew Bloom <andrew@andrewkbloom.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abloom/boring.js/issues"
+  },
+  "homepage": "https://github.com/abloom/boring.js"
+}
