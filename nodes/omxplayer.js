@@ -1,4 +1,4 @@
-var exec = require('child_process').execFile;
+var exec = require('child_process').exec;
 
 module.exports = function(RED) {
   function OmxPlayer(n) {
