@@ -1,4 +1,4 @@
-var exec = require('child_process').exec;
+var exec = require('child_process').execFile;
 
 module.exports = function(RED) {
   function OmxPlayer(n) {
@@ -10,7 +10,11 @@ module.exports = function(RED) {
         var cl = "/usr/bin/omxplayer " + msg.payload;
         node.log(cl);
         var child = exec(cl, function (error, stdout, stderr) {
-            node.send({payload: stdout});
+          if (error) {
+            error.stderr = stderr;
+            node.send([null, {payload: error}]);
+          }
+          node.send([{payload: stdout}, null]);
         });
       }
     });
