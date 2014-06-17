@@ -7,7 +7,7 @@ module.exports = function(RED) {
     var node = this;
     this.on("input", function(msg) {
       if (msg != null) {
-        var cl = "/usr/bin/omxplayer "+msg.payload;
+        var cl = "/usr/bin/omxplayer " + msg.payload;
         node.log(cl);
         var child = exec(cl, function (error, stdout, stderr) {
             node.send({payload: stdout});
