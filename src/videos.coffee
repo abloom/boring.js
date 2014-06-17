@@ -1,4 +1,5 @@
 fs = require 'fs'
+{reduce} = require 'underscore'
 
 readDir = (path, videos, cb) ->
   if typeof videos == "function"
@@ -15,12 +16,17 @@ readDir = (path, videos, cb) ->
         cb err if err
 
         if stats.isDirectory()
-          readDir file, (err, results) ->
-            videos[f] = results
+          readDir file, videos, (err, results) ->
             count--
-            cb null, videos if !count
+            cb null, results if !count
+
         else
-          videos.push file
+          parts = path.split("/")
+          group = parts[parts.length - 1]
+
+          videos[group] ||= []
+          videos[group].push {path: file, name: f}
+
           count--
           cb null, videos if !count
 
@@ -31,6 +37,10 @@ module.exports = (videoPath, done) ->
   readDir videoPath, (err, videos) ->
     done err if err
 
-    console.log "Videos loaded: #{videos.length}"
+    count = reduce videos, ((acc, value, key) ->
+      acc + value.length
+    ), 0
+
+    console.log "Videos loaded: #{count}"
     done err if err
-    done null, videos || []
+    done null, videos
