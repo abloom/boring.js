@@ -10,11 +10,12 @@ videoPath = normalize(process.env.VIDEO_PATH || "#{__dirname}/../videos")
 
 settings =
   flowFile: normalize("#{__dirname}/../flow.json")
+  functionGlobalContext: {}
   httpAdminRoot: "/"
   httpNodeRoot: "/api"
+  nodesDir: normalize("#{__dirname}/../nodes")
   userDir: normalize("#{__dirname}/../tmp")
   verbose: true
-  functionGlobalContext: {}
 
 funcs =
   app: (cb) ->

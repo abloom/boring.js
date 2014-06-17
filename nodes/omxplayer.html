@@ -1,0 +1,26 @@
+<script type="text/x-red" data-template-name="omxplayer">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="omxplayer">
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('omxplayer',{
+        category: 'advanced-function',
+        color:"darksalmon",
+        defaults: {
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "arrow-in.png",
+        align: "right",
+        label: function() {
+            return this.name||this.command;
+        }
+    });
+</script>
