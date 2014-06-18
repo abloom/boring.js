@@ -3,6 +3,7 @@ express = require "express"
 RED = require "node-red"
 async = require "async"
 {normalize} = require "path"
+omx = require "omxdirector"
 
 loadVideos = require "./videos"
 
@@ -10,7 +11,7 @@ videoPath = normalize(process.env.VIDEO_PATH || "#{__dirname}/../videos")
 
 settings =
   flowFile: normalize("#{__dirname}/../flow.json")
-  functionGlobalContext: {}
+  functionGlobalContext: {omx}
   httpAdminRoot: "/"
   httpNodeRoot: "/api"
   nodesDir: normalize("#{__dirname}/../nodes")
