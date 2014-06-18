@@ -16,6 +16,8 @@ module.exports = function(RED) {
       node.log(cl);
 
       child = exec(cl, function (error, stdout, stderr) {
+        child = undefined;
+
         if (error) {
           error.stderr = stderr;
           node.send([{payload: stdout}, {payload: error}]);
