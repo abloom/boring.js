@@ -4,7 +4,7 @@ module.exports = function(RED) {
   var child;
 
   function OmxPlayer(n) {
-    RED.nodes.createNode(this,n);
+    RED.nodes.createNode(this, n);
 
     var node = this;
     this.on("input", function(msg) {
@@ -12,10 +12,10 @@ module.exports = function(RED) {
 
       if (child) { child.stdin.write("q"); }
 
-      var cl = "/usr/bin/omxplayer " + msg.payload;
-      node.log(cl);
+      var cmd = "/usr/bin/omxplayer " + msg.payload;
+      node.log(cmd);
 
-      child = exec(cl, function (error, stdout, stderr) {
+      child = exec(cmd, function (error, stdout, stderr) {
         child = undefined;
 
         if (error) {
