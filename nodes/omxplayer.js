@@ -10,7 +10,7 @@ module.exports = function(RED) {
     this.on("input", function(msg) {
       if (!msg) { return; }
 
-      if (child) { child.kill(); }
+      if (child) { child.kill('SIGINT'); }
 
       var cl = "/usr/bin/omxplayer " + msg.payload;
       node.log(cl);
