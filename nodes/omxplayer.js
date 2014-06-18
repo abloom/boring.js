@@ -10,14 +10,15 @@ module.exports = function(RED) {
     this.on("input", function(msg) {
       if (!msg) { return; }
 
-      if (child) { child.stdin.write("q"); }
+      if (child) {
+        child.stdin.write("q");
+        child = undefined;
+      }
 
       var cmd = "/usr/bin/omxplayer " + msg.payload;
       node.log(cmd);
 
       child = exec(cmd, function (error, stdout, stderr) {
-        child = undefined;
-
         if (error) {
           error.stderr = stderr;
           node.send([{payload: stdout}, {payload: error}]);
