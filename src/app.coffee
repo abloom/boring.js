@@ -22,23 +22,29 @@ funcs =
   app: (cb) ->
     cb null, express()
 
-  videos: (cb) ->
-    loadVideos videoPath, cb
-
-  settings: ["videos", (cb, {videos}) ->
-    settings.functionGlobalContext.videos = videos
-    cb null, settings
+  server: ["app", (cb, {app}) ->
+    server = http.createServer app
+    cb null, server
   ]
 
-  server: ["app", "settings", (cb, {settings, app}) ->
-    server = http.createServer app
+  red: ["server", (cb, {server}) ->
     RED.init server, settings
+    cb null, RED
+  ]
+
+  videos: ["red", (cb) ->
+    loadVideos videoPath, (err, videos) ->
+      RED.settings.functionGlobalContext.videos = videos
+      cb null, videos
+  ]
+
+  settings: ["app", "red", "server", (cb, {app, server}) ->
     app.use settings.httpAdminRoot, RED.httpAdmin
     app.use settings.httpNodeRoot, RED.httpNode
     server.listen 8000, cb
   ]
 
-  red: ["server", (cb) ->
+  start: ["red", (cb) ->
     RED.start().done cb
   ]
 
